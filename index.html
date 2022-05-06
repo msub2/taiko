@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="./bundle.js" type="module"></script>
+    <title>Taiko</title>
+  </head>
+  <body>
+    <a-scene taiko="">
+      <a-assets>
+        <audio id="song" src="res/DREAM SOLISTER.mp3" preload="auto"></audio>
+      </a-assets>
+      <a-sky color="skyblue"></a-sky>
+      <a-plane width="10" height="10" rotation="-90 0 0" material="color: green"></a-plane>
+    </a-scene>
+  </body>
+</html>
