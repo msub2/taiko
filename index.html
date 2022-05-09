@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@c937479ed9f4e70c1cadacc4e14af6a9a82e3cef/dist/aframe-master.min.js"></script>
+    <script src="lib/physx.release.js"></script>
+    <script src="lib/physics.js"></script>
     <script src="./bundle.js" type="module"></script>
     <title>Taiko</title>
   </head>
   <body>
-    <a-scene taiko="">
+    <a-scene taiko="" physx="autoLoad: true; wasmUrl: lib/physx.release.wasm; delay: 1000">
       <a-assets>
         <audio id="song" src="res/DREAM SOLISTER.mp3" preload="auto"></audio>
+        <audio id="hitSound" src="res/taiko hit normal.wav" preload="auto"></audio>
+        <audio id="clapSound" src="res/taiko hit clap.wav" preload="auto"></audio>
       </a-assets>
       <a-sky color="skyblue"></a-sky>
       <a-plane width="10" height="10" rotation="-90 0 0" material="color: green"></a-plane>
+      <a-entity id="player">
+        <a-camera id="head" look-controls></a-camera>
+        <a-entity id="leftHand" tracked-controls="hand: left; space: gripSpace">
+          <a-box width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
+                 physx-body="type: kinematic"></a-box>
+        </a-entity>
+        <a-entity id="rightHand" tracked-controls="hand: right; space: gripSpace">
+          <a-box width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
+                 physx-body="type: kinematic"></a-box>
+        </a-entity>
+      </a-entity>
+      <a-box id="drumHead" position="-.1 1 -.5" width=".2" height=".2" depth=".2" material="color: orange" 
+             physx-body="type: static; emitCollisionEvents: true"></a-box>
+      <a-box id="drumRim" position=".1 1 -.5" width=".2" height=".2" depth=".2" material="color: blue"
+             physx-body="type: static; emitCollisionEvents: true"></a-box>
+      <a-text id="notesHit" value="Notes hit:" position="0 2 -2"></a-text>
+      <a-text id="noteStreak" value="Streak:" position="0 1.6 -2"></a-text>
+      <a-entity id="hit" sound="src: #hitSound; poolSize: 8; autoplay: false"></a-sound>
+      <a-entity id="clap" sound="src: #clapSound; poolSize: 8; autoplay: false"></a-sound>
     </a-scene>
   </body>
 </html>

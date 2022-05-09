@@ -13,31 +13,73 @@ AFRAME.registerComponent('taiko', {
     this.hitObjects = [];
     this.activeBeats = [];
     this.currentBeat = 0;
+    this.notesHit = 0;
+    this.noteStreak = 0;
 
-    document.addEventListener('keypress', e => {
-      if (e.key === ' ') {
-        this.started = true;
-        document.querySelector('#song').play();
-      } else if (e.key === 'z') {
-        if (this.activeBeats.length === 0) return;
+    const song = document.querySelector('#song');
+    const notesHit = document.querySelector('#notesHit');
+    const hitSound = document.querySelector('#hit').components.sound;
+    const clapSound = document.querySelector('#clap').components.sound;
 
-        if (this.activeBeats[0].isRim) {
-          if (Math.abs(this.activeBeats[0].startTime - this.time) < 125) {
-            console.log(`Hit beat ${this.activeBeats[0].beat.id}`);
-            this.deleteBeat(this.activeBeats[0].beat, 0);
-          }
-        }
-      } else if (e.key === 'x') {
-        if (this.activeBeats.length === 0) return;
+    const startSong  = () => {
+      if (this.started) return;
+      
+      song.addEventListener('play', () => this.started = true);
+      song.play();
+      notesHit.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+    }
 
-        if (!this.activeBeats[0].isRim) {
-          if (Math.abs(this.activeBeats[0].startTime - this.time) < 125) {
-            console.log(`Hit beat ${this.activeBeats[0].beat.id}`);
-            this.deleteBeat(this.activeBeats[0].beat, 0);
-          }
+    const checkRimHit = () => {
+      clapSound.playSound();
+      if (this.activeBeats.length === 0) return;
+
+      if (this.activeBeats[0].isRim) {
+        if (Math.abs(this.activeBeats[0].startTime - this.time) < 125) {
+          this.notesHit++;
+          notesHit.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+          this.deleteBeat(this.activeBeats[0].beat, 0);
         }
       }
-    })
+    }
+
+    const checkHeadHit = () => {
+      hitSound.playSound();
+      if (this.activeBeats.length === 0) return;
+
+      if (!this.activeBeats[0].isRim) {
+        if (Math.abs(this.activeBeats[0].startTime - this.time) < 125) {
+          this.notesHit++;
+          notesHit.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+          this.deleteBeat(this.activeBeats[0].beat, 0);
+        }
+      }
+    }
+
+    // Keyboard controls
+    document.addEventListener('keypress', e => {
+      if (e.key === ' ') {
+        startSong();
+      } else if (e.key === 'z') {
+        checkRimHit();
+      } else if (e.key === 'x') {
+        checkHeadHit();
+      }
+    });
+
+    // VR controls
+    document.addEventListener('enter-vr', e => {
+      console.log('entered vr')
+      this.el.sceneEl.xrSession.addEventListener('squeezestart', startSong);
+    });
+
+    const drumHead = document.querySelector('#drumRim');
+    drumHead.addEventListener('contactbegin', e => {
+      checkRimHit();
+    });
+    const drumRim = document.querySelector('#drumHead');
+    drumRim.addEventListener('contactbegin', e => {
+      checkHeadHit();
+    });
     
     this.load();
   },
@@ -95,7 +137,7 @@ AFRAME.registerComponent('taiko', {
       });
     }
 
-    // Update already spawned beats
+    // Delete old beats
     for (let i = this.activeBeats.length - 1; i >= 0; i--) {
       if (this.activeBeats[i] == null) continue;
       if (this.activeBeats[i].startTime - this.time < -500) {
@@ -109,6 +151,5 @@ AFRAME.registerComponent('taiko', {
     if (!beat) return;
     beat.remove()
     this.activeBeats.splice(idx, 1);
-    console.log(`Deleted beat ${beat.id}`);
   }
 });
