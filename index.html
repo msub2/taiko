@@ -14,8 +14,11 @@
         <audio id="hitSound" src="res/taiko hit normal.wav" preload="auto"></audio>
         <audio id="clapSound" src="res/taiko hit clap.wav" preload="auto"></audio>
       </a-assets>
+      <!-- Environment -->
       <a-sky color="skyblue"></a-sky>
       <a-plane width="10" height="10" rotation="-90 0 0" material="color: green"></a-plane>
+      <a-plane id="noteHighway" width="1" height="5" position="0 1.5 -3.1" rotation="-80 0 0"></a-plane>
+      <!-- Player -->
       <a-entity id="player">
         <a-camera id="head" look-controls></a-camera>
         <a-entity id="leftHand" tracked-controls="hand: left; space: gripSpace">
@@ -27,12 +30,17 @@
                  physx-body="type: kinematic"></a-box>
         </a-entity>
       </a-entity>
-      <a-box id="drumHead" position="-.1 1 -.5" width=".2" height=".2" depth=".2" material="color: orange" 
+      <!-- Drum -->
+      <a-box id="drumRimLeft" position="-.3 1 -.5" width=".2" height=".2" depth=".2" material="color: blue"
              physx-body="type: static; emitCollisionEvents: true"></a-box>
-      <a-box id="drumRim" position=".1 1 -.5" width=".2" height=".2" depth=".2" material="color: blue"
+      <a-box id="drumHeadLeft" position="-.1 1 -.5" width=".2" height=".2" depth=".2" material="color: orange" 
              physx-body="type: static; emitCollisionEvents: true"></a-box>
-      <a-text id="notesHit" value="Notes hit:" position="0 2 -2"></a-text>
-      <a-text id="noteStreak" value="Streak:" position="0 1.6 -2"></a-text>
+      <a-box id="drumHeadRight" position=".1 1 -.5" width=".2" height=".2" depth=".2" material="color: orange" 
+             physx-body="type: static; emitCollisionEvents: true"></a-box>
+      <a-box id="drumRimRight" position=".3 1 -.5" width=".2" height=".2" depth=".2" material="color: blue"
+             physx-body="type: static; emitCollisionEvents: true"></a-box>
+      <a-text id="notesHit" value="Notes hit:" position="1 2 -2"></a-text>
+      <a-text id="noteStreak" value="Streak:" position="1 1.6 -2"></a-text>
       <a-entity id="hit" sound="src: #hitSound; poolSize: 8; autoplay: false"></a-sound>
       <a-entity id="clap" sound="src: #clapSound; poolSize: 8; autoplay: false"></a-sound>
     </a-scene>

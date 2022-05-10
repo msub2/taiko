@@ -16,8 +16,13 @@ AFRAME.registerComponent('taiko', {
     this.notesHit = 0;
     this.noteStreak = 0;
 
+    this.notesHitText = document.querySelector('#notesHit');
+    this.noteStreakText = document.querySelector('#noteStreak');
+    const drumRimLeft = document.querySelector('#drumRimLeft');
+    const drumRimRight = document.querySelector('#drumRimRight');
+    const drumHeadLeft = document.querySelector('#drumHeadLeft');
+    const drumHeadRight = document.querySelector('#drumHeadRight');
     const song = document.querySelector('#song');
-    const notesHit = document.querySelector('#notesHit');
     const hitSound = document.querySelector('#hit').components.sound;
     const clapSound = document.querySelector('#clap').components.sound;
 
@@ -26,7 +31,7 @@ AFRAME.registerComponent('taiko', {
       
       song.addEventListener('play', () => this.started = true);
       song.play();
-      notesHit.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+      this.notesHitText.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
     }
 
     const checkRimHit = () => {
@@ -36,7 +41,9 @@ AFRAME.registerComponent('taiko', {
       if (this.activeBeats[0].isRim) {
         if (Math.abs(this.activeBeats[0].startTime - this.time) < 125) {
           this.notesHit++;
-          notesHit.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+          this.noteStreak++;
+          this.notesHitText.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+          this.noteStreakText.setAttribute('value', `Streak: ${this.noteStreak}`);
           this.deleteBeat(this.activeBeats[0].beat, 0);
         }
       }
@@ -49,7 +56,9 @@ AFRAME.registerComponent('taiko', {
       if (!this.activeBeats[0].isRim) {
         if (Math.abs(this.activeBeats[0].startTime - this.time) < 125) {
           this.notesHit++;
-          notesHit.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+          this.noteStreak++;
+          this.notesHitText.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
+          this.noteStreakText.setAttribute('value', `Streak: ${this.noteStreak}`);
           this.deleteBeat(this.activeBeats[0].beat, 0);
         }
       }
@@ -59,27 +68,22 @@ AFRAME.registerComponent('taiko', {
     document.addEventListener('keypress', e => {
       if (e.key === ' ') {
         startSong();
-      } else if (e.key === 'z') {
+      } else if (e.key === 'z' || e.key === 'v') {
         checkRimHit();
-      } else if (e.key === 'x') {
+      } else if (e.key === 'x' || e.key === 'c') {
         checkHeadHit();
       }
     });
 
     // VR controls
     document.addEventListener('enter-vr', e => {
-      console.log('entered vr')
       this.el.sceneEl.xrSession.addEventListener('squeezestart', startSong);
     });
 
-    const drumHead = document.querySelector('#drumRim');
-    drumHead.addEventListener('contactbegin', e => {
-      checkRimHit();
-    });
-    const drumRim = document.querySelector('#drumHead');
-    drumRim.addEventListener('contactbegin', e => {
-      checkHeadHit();
-    });
+    drumRimLeft.addEventListener('contactbegin', checkRimHit);
+    drumRimRight.addEventListener('contactbegin', checkRimHit);
+    drumHeadLeft.addEventListener('contactbegin', checkHeadHit);
+    drumHeadRight.addEventListener('contactbegin', checkHeadHit);
     
     this.load();
   },
@@ -114,20 +118,20 @@ AFRAME.registerComponent('taiko', {
     // Spawn beats that are one second or less away
     for (; this.currentBeat < this.hitObjects.length; this.currentBeat++) {
       // Stop iterating when the next hit is more than a second away
-      if (this.hitObjects[this.currentBeat].startTime - this.time > 1000) break;
+      if (this.hitObjects[this.currentBeat].startTime - this.time > 2000) break;
 
       // Create the beat object
       const beat = document.createElement('a-box');
       const { startTime, isRim, isStrong } = this.hitObjects[this.currentBeat];
       const position = (startTime - this.time) / 100;
       const color = isRim ? 'blue' : 'orange';
-      const scale = isStrong ? '1 1 1' : '0.5 0.5 0.5';
-      beat.setAttribute('position', `0 0 -${position}`);
+      const scale = isStrong ? '1 1 .1' : '0.5 0.5 0.1';
+      beat.setAttribute('position', `0 ${position} 0`);
       beat.setAttribute('scale', scale);
-      beat.setAttribute('animation', `property: position; to: 0 0 0; dur: ${position * 100}; easing: linear`);
+      beat.setAttribute('animation', `property: position; to: 0 -2.5 0; dur: ${position * 100}; easing: linear`);
       beat.setAttribute('material', `color: ${color}`);
       beat.id = `${this.currentBeat}`;
-      AFRAME.scenes[0].appendChild(beat);
+      document.querySelector('#noteHighway').appendChild(beat);
       this.activeBeats.push({
         beat: beat,
         startTime: this.hitObjects[this.currentBeat].startTime,
@@ -140,9 +144,11 @@ AFRAME.registerComponent('taiko', {
     // Delete old beats
     for (let i = this.activeBeats.length - 1; i >= 0; i--) {
       if (this.activeBeats[i] == null) continue;
-      if (this.activeBeats[i].startTime - this.time < -500) {
+      if (this.activeBeats[i].startTime - this.time < -125) {
         const oldBeat = document.getElementById(this.activeBeats[i].beat.id);
         this.deleteBeat(oldBeat, i);
+        this.noteStreak = 0;
+        this.noteStreakText.setAttribute('value', `Streak: ${this.noteStreak}`);
       }
     }
   },
@@ -150,6 +156,6 @@ AFRAME.registerComponent('taiko', {
   deleteBeat: function(beat, idx) {
     if (!beat) return;
     beat.remove()
-    this.activeBeats.splice(idx, 1);
+    this.activeBeats.splice(idx, 1);    
   }
 });
