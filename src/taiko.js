@@ -1,5 +1,6 @@
 import { BeatmapDecoder } from '../lib/osu-parsers.js';
 import { TaikoRuleset } from 'osu-taiko-stable';
+import { unzipSync } from 'fflate';
 
 AFRAME.registerComponent('taiko', {
   schema: {
@@ -22,15 +23,15 @@ AFRAME.registerComponent('taiko', {
     const drumRimRight = document.querySelector('#drumRimRight');
     const drumHeadLeft = document.querySelector('#drumHeadLeft');
     const drumHeadRight = document.querySelector('#drumHeadRight');
-    const song = document.querySelector('#song');
+    this.song = document.querySelector('#song');
     const hitSound = document.querySelector('#hit').components.sound;
     const clapSound = document.querySelector('#clap').components.sound;
 
     const startSong  = () => {
       if (this.started) return;
       
-      song.addEventListener('play', () => this.started = true);
-      song.play();
+      this.song.addEventListener('play', () => this.started = true);
+      this.song.play();
       this.notesHitText.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
     }
 
@@ -85,17 +86,17 @@ AFRAME.registerComponent('taiko', {
     drumHeadLeft.addEventListener('contactbegin', checkHeadHit);
     drumHeadRight.addEventListener('contactbegin', checkHeadHit);
     
-    this.load();
+    this.loadBeatmapSet();
   },
 
-  load: async function () {
+  loadBeatmap: async function (beatmap) {
     const decoder = new BeatmapDecoder();
 
-    const decodePath = await (await fetch('res/TRUE - DREAM SOLISTER (Kibbleru) [Easy].osu')).text();
+    const decodeString = beatmap;
     const shouldParseSb = true;
 
     // Get beatmap object.
-    const parsed = decoder.decodeFromString(decodePath, shouldParseSb);
+    const parsed = decoder.decodeFromString(decodeString, shouldParseSb);
 
     // Create a new osu!taiko ruleset.
     const ruleset = new TaikoRuleset();
@@ -108,6 +109,20 @@ AFRAME.registerComponent('taiko', {
     this.metadata = taikoWithNoMod.metadata;
     this.hitObjects = taikoWithNoMod.hitObjects;
     this.activeBeats = [];
+  },
+
+  loadBeatmapSet: async function () {
+    const beatmapSet = await (await fetch('https://api.chimu.moe/v1/download/359501')).arrayBuffer()
+    const beatmapSetBuffers = unzipSync(new Uint8Array(beatmapSet));
+    console.log(beatmapSetBuffers);
+    const testBeatmapAudio = Object.values(beatmapSetBuffers)[0];
+    const audioBlob = new Blob([testBeatmapAudio.buffer], { type: 'audio/mp3' });
+    this.song.src = URL.createObjectURL(audioBlob);
+    const testBeatmap = Object.values(beatmapSetBuffers)[5];
+    const dataview = new DataView(testBeatmap.buffer);
+    const textDecoder = new TextDecoder('utf-8');
+    const decodedBeatmap = textDecoder.decode(dataview);
+    this.loadBeatmap(decodedBeatmap);
   },
 
   tick: function (time, timeDelta) {

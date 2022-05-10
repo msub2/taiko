@@ -815,8 +815,8 @@ var BeatmapDifficultySection = class {
     this._OD = value;
   }
   get approachRate() {
-    let _a2;
-    return Math.fround((_a2 = this._AR) !== null && _a2 !== void 0 ? _a2 : this._OD);
+    let _a3;
+    return Math.fround((_a3 = this._AR) !== null && _a3 !== void 0 ? _a3 : this._OD);
   }
   set approachRate(value) {
     this._AR = value;
@@ -852,9 +852,9 @@ var BeatmapDifficultySection = class {
     cloned.clockRate = this._rate;
     return cloned;
   }
-  static range(diff, min, mid, max) {
+  static range(diff, min, mid, max2) {
     if (diff > 5) {
-      return mid + (max - mid) * (diff - 5) / 5;
+      return mid + (max2 - mid) * (diff - 5) / 5;
     }
     if (diff < 5) {
       return mid - (mid - min) * (5 - diff) / 5;
@@ -950,7 +950,7 @@ var BeatmapProcessor = class {
 };
 var BeatmapConverter = class {
   convertBeatmap(beatmap) {
-    let _a2;
+    let _a3;
     const converted = this.createBeatmap();
     converted.general = beatmap.general.clone();
     converted.editor = beatmap.editor.clone();
@@ -961,7 +961,7 @@ var BeatmapConverter = class {
     converted.controlPoints = beatmap.controlPoints.clone();
     converted.fileFormat = beatmap.fileFormat;
     converted.originalMode = beatmap.originalMode;
-    converted.base = (_a2 = beatmap.base) !== null && _a2 !== void 0 ? _a2 : beatmap;
+    converted.base = (_a3 = beatmap.base) !== null && _a3 !== void 0 ? _a3 : beatmap;
     for (const hitObject of this.convertHitObjects(converted.base)) {
       converted.hitObjects.push(hitObject);
     }
@@ -1247,10 +1247,10 @@ var DifficultyCalculator = class {
     return attributes;
   }
   _getWorkingBeatmap(mods) {
-    let _a2, _b, _c;
+    let _a3, _b2, _c;
     const rulesetBeatmap = this._beatmap;
     const sameRuleset = this._beatmap.mode === this._ruleset.id;
-    const sameMods = (_b = (_a2 = rulesetBeatmap.mods) === null || _a2 === void 0 ? void 0 : _a2.equals(mods)) !== null && _b !== void 0 ? _b : false;
+    const sameMods = (_b2 = (_a3 = rulesetBeatmap.mods) === null || _a3 === void 0 ? void 0 : _a3.equals(mods)) !== null && _b2 !== void 0 ? _b2 : false;
     if (sameRuleset && sameMods) {
       return rulesetBeatmap;
     }
@@ -1620,7 +1620,7 @@ var ModCombination = class {
     return this.acronyms.join("");
   }
   toBitwise(input) {
-    let _a2, _b;
+    let _a3, _b2;
     if (typeof input === "number") {
       return Math.max(0, input);
     }
@@ -1630,11 +1630,11 @@ var ModCombination = class {
     if (input.length % 2) {
       return 0;
     }
-    const acronyms = (_b = (_a2 = input.match(/.{1,2}/g)) === null || _a2 === void 0 ? void 0 : _a2.map((a) => a.toUpperCase())) !== null && _b !== void 0 ? _b : [];
+    const acronyms = (_b2 = (_a3 = input.match(/.{1,2}/g)) === null || _a3 === void 0 ? void 0 : _a3.map((a) => a.toUpperCase())) !== null && _b2 !== void 0 ? _b2 : [];
     return acronyms.reduce((bitwise, acronym) => {
-      let _a3;
+      let _a4;
       const found = this._availableMods.find((m) => m.acronym === acronym);
-      return bitwise | ((_a3 = found === null || found === void 0 ? void 0 : found.bitwise) !== null && _a3 !== void 0 ? _a3 : 0);
+      return bitwise | ((_a4 = found === null || found === void 0 ? void 0 : found.bitwise) !== null && _a4 !== void 0 ? _a4 : 0);
     }, 0);
   }
   clone() {
@@ -1650,7 +1650,7 @@ var ModCombination = class {
 };
 var PerformanceCalculator = class {
   constructor(ruleset, attributes, score) {
-    let _a2, _b;
+    let _a3, _b2;
     this._clockRate = 1;
     this._ruleset = ruleset;
     this._score = score;
@@ -1658,10 +1658,10 @@ var PerformanceCalculator = class {
       throw new Error("Attributes are null!");
     }
     this.attributes = attributes;
-    if ((_a2 = score.mods) === null || _a2 === void 0 ? void 0 : _a2.has(ModBitwise.DoubleTime || ModBitwise.Nightcore)) {
+    if ((_a3 = score.mods) === null || _a3 === void 0 ? void 0 : _a3.has(ModBitwise.DoubleTime || ModBitwise.Nightcore)) {
       this._clockRate = 1.5;
     }
-    if ((_b = score.mods) === null || _b === void 0 ? void 0 : _b.has(ModBitwise.HalfTime)) {
+    if ((_b2 = score.mods) === null || _b2 === void 0 ? void 0 : _b2.has(ModBitwise.HalfTime)) {
       this._clockRate = 0.75;
     }
   }
@@ -1671,13 +1671,13 @@ var PerformanceCalculator = class {
 };
 var DifficultyHitObject = class {
   constructor(hitObject, lastObject, clockRate) {
-    let _a2;
+    let _a3;
     this.baseObject = hitObject;
     this.lastObject = lastObject;
     this.deltaTime = (hitObject.startTime - lastObject.startTime) / clockRate;
     this.startTime = hitObject.startTime / clockRate;
     const durationObj = hitObject;
-    this.endTime = ((_a2 = durationObj === null || durationObj === void 0 ? void 0 : durationObj.endTime) !== null && _a2 !== void 0 ? _a2 : hitObject.startTime) / clockRate;
+    this.endTime = ((_a3 = durationObj === null || durationObj === void 0 ? void 0 : durationObj.endTime) !== null && _a3 !== void 0 ? _a3 : hitObject.startTime) / clockRate;
   }
 };
 var ReverseQueue = class {
@@ -2514,15 +2514,15 @@ var Ruleset = class {
   }
 };
 var DifficultyRange = class {
-  constructor(result, min, average, max) {
+  constructor(result, min, average, max2) {
     this.result = result;
     this.min = min;
     this.average = average;
-    this.max = max;
+    this.max = max2;
   }
-  static map(difficulty, min, mid, max) {
+  static map(difficulty, min, mid, max2) {
     if (difficulty > 5) {
-      return mid + (max - mid) * (difficulty - 5) / 5;
+      return mid + (max2 - mid) * (difficulty - 5) / 5;
     }
     if (difficulty < 5) {
       return mid - (mid - min) * (5 - difficulty) / 5;
@@ -3129,8 +3129,8 @@ var StoryboardSprite = class {
       return maxStart < command.startTime ? command.startTime : maxStart;
     }, -Infinity);
     const loopsStart = loops.reduce((maxStart, loop) => {
-      const maxLoopStart = loop.commands.reduce((max, command) => {
-        return max < command.startTime ? command.startTime : max;
+      const maxLoopStart = loop.commands.reduce((max2, command) => {
+        return max2 < command.startTime ? command.startTime : max2;
       }, -Infinity);
       return maxStart < maxLoopStart ? maxLoopStart : maxStart;
     }, -Infinity);
@@ -4802,11 +4802,11 @@ var TaikoDifficultyHitObjectRhythm = class {
 };
 var TaikoDifficultyHitObject = class extends DifficultyHitObject {
   constructor(hitObject, lastObject, lastLastObject, clockRate, objectIndex) {
-    let _a2;
+    let _a3;
     super(hitObject, lastObject, clockRate);
     this.staminaCheese = false;
     this.rhythm = this._getClosestRhythm(lastObject, lastLastObject, clockRate);
-    this.isRim = (_a2 = hitObject) === null || _a2 === void 0 ? void 0 : _a2.isRim;
+    this.isRim = (_a3 = hitObject) === null || _a3 === void 0 ? void 0 : _a3.isRim;
     this.objectIndex = objectIndex;
   }
   _getClosestRhythm(lastObject, lastLastObject, clockRate) {
@@ -5157,11 +5157,11 @@ TaikoDifficultyCalculator._RHYTHM_SKILL_MULTIPLIER = 0.014;
 TaikoDifficultyCalculator._STAMINA_SKILL_MULTIPLIER = 0.02;
 var TaikoPerformanceCalculator = class extends PerformanceCalculator {
   constructor(ruleset, attributes, score) {
-    let _a2, _b, _c, _d, _e, _f;
+    let _a3, _b2, _c, _d, _e, _f;
     super(ruleset, attributes, score);
     this.attributes = attributes;
-    this._mods = (_a2 = score === null || score === void 0 ? void 0 : score.mods) !== null && _a2 !== void 0 ? _a2 : new TaikoModCombination();
-    this._countGreat = (_b = this._score.statistics.great) !== null && _b !== void 0 ? _b : 0;
+    this._mods = (_a3 = score === null || score === void 0 ? void 0 : score.mods) !== null && _a3 !== void 0 ? _a3 : new TaikoModCombination();
+    this._countGreat = (_b2 = this._score.statistics.great) !== null && _b2 !== void 0 ? _b2 : 0;
     this._countOk = (_c = this._score.statistics.ok) !== null && _c !== void 0 ? _c : 0;
     this._countMeh = (_d = this._score.statistics.meh) !== null && _d !== void 0 ? _d : 0;
     this._countMiss = (_e = this._score.statistics.miss) !== null && _e !== void 0 ? _e : 0;
@@ -5184,8 +5184,8 @@ var TaikoPerformanceCalculator = class extends PerformanceCalculator {
     return attributes;
   }
   _computeStrainValue() {
-    const max = Math.max(1, this.attributes.starRating / 75e-4);
-    let strainValue = Math.pow(5 * max - 4, 2) / 1e5;
+    const max2 = Math.max(1, this.attributes.starRating / 75e-4);
+    let strainValue = Math.pow(5 * max2 - 4, 2) / 1e5;
     const lengthBonus = 1 + 0.1 * Math.min(1, this._totalHits / 1500);
     strainValue *= lengthBonus;
     strainValue *= Math.pow(0.985, this._countMiss);
@@ -5238,6 +5238,395 @@ var TaikoRuleset = class extends Ruleset {
   }
 };
 
+// node_modules/fflate/esm/browser.js
+var u8 = Uint8Array;
+var u16 = Uint16Array;
+var u32 = Uint32Array;
+var fleb = new u8([0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0, 0]);
+var fdeb = new u8([0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 0, 0]);
+var clim = new u8([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
+var freb = function(eb, start) {
+  var b = new u16(31);
+  for (var i = 0; i < 31; ++i) {
+    b[i] = start += 1 << eb[i - 1];
+  }
+  var r = new u32(b[30]);
+  for (var i = 1; i < 30; ++i) {
+    for (var j = b[i]; j < b[i + 1]; ++j) {
+      r[j] = j - b[i] << 5 | i;
+    }
+  }
+  return [b, r];
+};
+var _a2 = freb(fleb, 2);
+var fl = _a2[0];
+var revfl = _a2[1];
+fl[28] = 258, revfl[258] = 28;
+var _b = freb(fdeb, 0);
+var fd = _b[0];
+var revfd = _b[1];
+var rev = new u16(32768);
+for (i = 0; i < 32768; ++i) {
+  x = (i & 43690) >>> 1 | (i & 21845) << 1;
+  x = (x & 52428) >>> 2 | (x & 13107) << 2;
+  x = (x & 61680) >>> 4 | (x & 3855) << 4;
+  rev[i] = ((x & 65280) >>> 8 | (x & 255) << 8) >>> 1;
+}
+var x;
+var i;
+var hMap = function(cd, mb, r) {
+  var s = cd.length;
+  var i = 0;
+  var l = new u16(mb);
+  for (; i < s; ++i) {
+    if (cd[i])
+      ++l[cd[i] - 1];
+  }
+  var le = new u16(mb);
+  for (i = 0; i < mb; ++i) {
+    le[i] = le[i - 1] + l[i - 1] << 1;
+  }
+  var co;
+  if (r) {
+    co = new u16(1 << mb);
+    var rvb = 15 - mb;
+    for (i = 0; i < s; ++i) {
+      if (cd[i]) {
+        var sv = i << 4 | cd[i];
+        var r_1 = mb - cd[i];
+        var v = le[cd[i] - 1]++ << r_1;
+        for (var m = v | (1 << r_1) - 1; v <= m; ++v) {
+          co[rev[v] >>> rvb] = sv;
+        }
+      }
+    }
+  } else {
+    co = new u16(s);
+    for (i = 0; i < s; ++i) {
+      if (cd[i]) {
+        co[i] = rev[le[cd[i] - 1]++] >>> 15 - cd[i];
+      }
+    }
+  }
+  return co;
+};
+var flt = new u8(288);
+for (i = 0; i < 144; ++i)
+  flt[i] = 8;
+var i;
+for (i = 144; i < 256; ++i)
+  flt[i] = 9;
+var i;
+for (i = 256; i < 280; ++i)
+  flt[i] = 7;
+var i;
+for (i = 280; i < 288; ++i)
+  flt[i] = 8;
+var i;
+var fdt = new u8(32);
+for (i = 0; i < 32; ++i)
+  fdt[i] = 5;
+var i;
+var flrm = /* @__PURE__ */ hMap(flt, 9, 1);
+var fdrm = /* @__PURE__ */ hMap(fdt, 5, 1);
+var max = function(a) {
+  var m = a[0];
+  for (var i = 1; i < a.length; ++i) {
+    if (a[i] > m)
+      m = a[i];
+  }
+  return m;
+};
+var bits = function(d, p, m) {
+  var o = p / 8 | 0;
+  return (d[o] | d[o + 1] << 8) >> (p & 7) & m;
+};
+var bits16 = function(d, p) {
+  var o = p / 8 | 0;
+  return (d[o] | d[o + 1] << 8 | d[o + 2] << 16) >> (p & 7);
+};
+var shft = function(p) {
+  return (p + 7) / 8 | 0;
+};
+var slc = function(v, s, e) {
+  if (s == null || s < 0)
+    s = 0;
+  if (e == null || e > v.length)
+    e = v.length;
+  var n = new (v.BYTES_PER_ELEMENT == 2 ? u16 : v.BYTES_PER_ELEMENT == 4 ? u32 : u8)(e - s);
+  n.set(v.subarray(s, e));
+  return n;
+};
+var ec = [
+  "unexpected EOF",
+  "invalid block type",
+  "invalid length/literal",
+  "invalid distance",
+  "stream finished",
+  "no stream handler",
+  ,
+  "no callback",
+  "invalid UTF-8 data",
+  "extra field too long",
+  "date not in range 1980-2099",
+  "filename too long",
+  "stream finishing",
+  "invalid zip data"
+];
+var err = function(ind, msg, nt) {
+  var e = new Error(msg || ec[ind]);
+  e.code = ind;
+  if (Error.captureStackTrace)
+    Error.captureStackTrace(e, err);
+  if (!nt)
+    throw e;
+  return e;
+};
+var inflt = function(dat, buf, st) {
+  var sl = dat.length;
+  if (!sl || st && st.f && !st.l)
+    return buf || new u8(0);
+  var noBuf = !buf || st;
+  var noSt = !st || st.i;
+  if (!st)
+    st = {};
+  if (!buf)
+    buf = new u8(sl * 3);
+  var cbuf = function(l2) {
+    var bl = buf.length;
+    if (l2 > bl) {
+      var nbuf = new u8(Math.max(bl * 2, l2));
+      nbuf.set(buf);
+      buf = nbuf;
+    }
+  };
+  var final = st.f || 0, pos = st.p || 0, bt = st.b || 0, lm = st.l, dm = st.d, lbt = st.m, dbt = st.n;
+  var tbts = sl * 8;
+  do {
+    if (!lm) {
+      final = bits(dat, pos, 1);
+      var type = bits(dat, pos + 1, 3);
+      pos += 3;
+      if (!type) {
+        var s = shft(pos) + 4, l = dat[s - 4] | dat[s - 3] << 8, t = s + l;
+        if (t > sl) {
+          if (noSt)
+            err(0);
+          break;
+        }
+        if (noBuf)
+          cbuf(bt + l);
+        buf.set(dat.subarray(s, t), bt);
+        st.b = bt += l, st.p = pos = t * 8, st.f = final;
+        continue;
+      } else if (type == 1)
+        lm = flrm, dm = fdrm, lbt = 9, dbt = 5;
+      else if (type == 2) {
+        var hLit = bits(dat, pos, 31) + 257, hcLen = bits(dat, pos + 10, 15) + 4;
+        var tl = hLit + bits(dat, pos + 5, 31) + 1;
+        pos += 14;
+        var ldt = new u8(tl);
+        var clt = new u8(19);
+        for (var i = 0; i < hcLen; ++i) {
+          clt[clim[i]] = bits(dat, pos + i * 3, 7);
+        }
+        pos += hcLen * 3;
+        var clb = max(clt), clbmsk = (1 << clb) - 1;
+        var clm = hMap(clt, clb, 1);
+        for (var i = 0; i < tl; ) {
+          var r = clm[bits(dat, pos, clbmsk)];
+          pos += r & 15;
+          var s = r >>> 4;
+          if (s < 16) {
+            ldt[i++] = s;
+          } else {
+            var c = 0, n = 0;
+            if (s == 16)
+              n = 3 + bits(dat, pos, 3), pos += 2, c = ldt[i - 1];
+            else if (s == 17)
+              n = 3 + bits(dat, pos, 7), pos += 3;
+            else if (s == 18)
+              n = 11 + bits(dat, pos, 127), pos += 7;
+            while (n--)
+              ldt[i++] = c;
+          }
+        }
+        var lt = ldt.subarray(0, hLit), dt = ldt.subarray(hLit);
+        lbt = max(lt);
+        dbt = max(dt);
+        lm = hMap(lt, lbt, 1);
+        dm = hMap(dt, dbt, 1);
+      } else
+        err(1);
+      if (pos > tbts) {
+        if (noSt)
+          err(0);
+        break;
+      }
+    }
+    if (noBuf)
+      cbuf(bt + 131072);
+    var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
+    var lpos = pos;
+    for (; ; lpos = pos) {
+      var c = lm[bits16(dat, pos) & lms], sym = c >>> 4;
+      pos += c & 15;
+      if (pos > tbts) {
+        if (noSt)
+          err(0);
+        break;
+      }
+      if (!c)
+        err(2);
+      if (sym < 256)
+        buf[bt++] = sym;
+      else if (sym == 256) {
+        lpos = pos, lm = null;
+        break;
+      } else {
+        var add = sym - 254;
+        if (sym > 264) {
+          var i = sym - 257, b = fleb[i];
+          add = bits(dat, pos, (1 << b) - 1) + fl[i];
+          pos += b;
+        }
+        var d = dm[bits16(dat, pos) & dms], dsym = d >>> 4;
+        if (!d)
+          err(3);
+        pos += d & 15;
+        var dt = fd[dsym];
+        if (dsym > 3) {
+          var b = fdeb[dsym];
+          dt += bits16(dat, pos) & (1 << b) - 1, pos += b;
+        }
+        if (pos > tbts) {
+          if (noSt)
+            err(0);
+          break;
+        }
+        if (noBuf)
+          cbuf(bt + 131072);
+        var end = bt + add;
+        for (; bt < end; bt += 4) {
+          buf[bt] = buf[bt - dt];
+          buf[bt + 1] = buf[bt + 1 - dt];
+          buf[bt + 2] = buf[bt + 2 - dt];
+          buf[bt + 3] = buf[bt + 3 - dt];
+        }
+        bt = end;
+      }
+    }
+    st.l = lm, st.p = lpos, st.b = bt, st.f = final;
+    if (lm)
+      final = 1, st.m = lbt, st.d = dm, st.n = dbt;
+  } while (!final);
+  return bt == buf.length ? buf : slc(buf, 0, bt);
+};
+var et = /* @__PURE__ */ new u8(0);
+var b2 = function(d, b) {
+  return d[b] | d[b + 1] << 8;
+};
+var b4 = function(d, b) {
+  return (d[b] | d[b + 1] << 8 | d[b + 2] << 16 | d[b + 3] << 24) >>> 0;
+};
+var b8 = function(d, b) {
+  return b4(d, b) + b4(d, b + 4) * 4294967296;
+};
+function inflateSync(data, out) {
+  return inflt(data, out);
+}
+var td = typeof TextDecoder != "undefined" && /* @__PURE__ */ new TextDecoder();
+var tds = 0;
+try {
+  td.decode(et, { stream: true });
+  tds = 1;
+} catch (e) {
+}
+var dutf8 = function(d) {
+  for (var r = "", i = 0; ; ) {
+    var c = d[i++];
+    var eb = (c > 127) + (c > 223) + (c > 239);
+    if (i + eb > d.length)
+      return [r, slc(d, i - 1)];
+    if (!eb)
+      r += String.fromCharCode(c);
+    else if (eb == 3) {
+      c = ((c & 15) << 18 | (d[i++] & 63) << 12 | (d[i++] & 63) << 6 | d[i++] & 63) - 65536, r += String.fromCharCode(55296 | c >> 10, 56320 | c & 1023);
+    } else if (eb & 1)
+      r += String.fromCharCode((c & 31) << 6 | d[i++] & 63);
+    else
+      r += String.fromCharCode((c & 15) << 12 | (d[i++] & 63) << 6 | d[i++] & 63);
+  }
+};
+function strFromU8(dat, latin1) {
+  if (latin1) {
+    var r = "";
+    for (var i = 0; i < dat.length; i += 16384)
+      r += String.fromCharCode.apply(null, dat.subarray(i, i + 16384));
+    return r;
+  } else if (td)
+    return td.decode(dat);
+  else {
+    var _a3 = dutf8(dat), out = _a3[0], ext = _a3[1];
+    if (ext.length)
+      err(8);
+    return out;
+  }
+}
+var slzh = function(d, b) {
+  return b + 30 + b2(d, b + 26) + b2(d, b + 28);
+};
+var zh = function(d, b, z) {
+  var fnl = b2(d, b + 28), fn = strFromU8(d.subarray(b + 46, b + 46 + fnl), !(b2(d, b + 8) & 2048)), es = b + 46 + fnl, bs = b4(d, b + 20);
+  var _a3 = z && bs == 4294967295 ? z64e(d, es) : [bs, b4(d, b + 24), b4(d, b + 42)], sc = _a3[0], su = _a3[1], off = _a3[2];
+  return [b2(d, b + 10), sc, su, fn, es + b2(d, b + 30) + b2(d, b + 32), off];
+};
+var z64e = function(d, b) {
+  for (; b2(d, b) != 1; b += 4 + b2(d, b + 2))
+    ;
+  return [b8(d, b + 12), b8(d, b + 4), b8(d, b + 20)];
+};
+function unzipSync(data, opts) {
+  var files = {};
+  var e = data.length - 22;
+  for (; b4(data, e) != 101010256; --e) {
+    if (!e || data.length - e > 65558)
+      err(13);
+  }
+  ;
+  var c = b2(data, e + 8);
+  if (!c)
+    return {};
+  var o = b4(data, e + 16);
+  var z = o == 4294967295;
+  if (z) {
+    e = b4(data, e - 12);
+    if (b4(data, e) != 101075792)
+      err(13);
+    c = b4(data, e + 32);
+    o = b4(data, e + 48);
+  }
+  var fltr = opts && opts.filter;
+  for (var i = 0; i < c; ++i) {
+    var _a3 = zh(data, o, z), c_2 = _a3[0], sc = _a3[1], su = _a3[2], fn = _a3[3], no = _a3[4], off = _a3[5], b = slzh(data, off);
+    o = no;
+    if (!fltr || fltr({
+      name: fn,
+      size: sc,
+      originalSize: su,
+      compression: c_2
+    })) {
+      if (!c_2)
+        files[fn] = slc(data, b, b + sc);
+      else if (c_2 == 8)
+        files[fn] = inflateSync(data.subarray(b, b + sc), new u8(su));
+      else
+        err(14, "unknown compression type " + c_2);
+    }
+  }
+  return files;
+}
+
 // src/taiko.js
 AFRAME.registerComponent("taiko", {
   schema: {},
@@ -5256,14 +5645,14 @@ AFRAME.registerComponent("taiko", {
     const drumRimRight = document.querySelector("#drumRimRight");
     const drumHeadLeft = document.querySelector("#drumHeadLeft");
     const drumHeadRight = document.querySelector("#drumHeadRight");
-    const song = document.querySelector("#song");
+    this.song = document.querySelector("#song");
     const hitSound = document.querySelector("#hit").components.sound;
     const clapSound = document.querySelector("#clap").components.sound;
     const startSong = () => {
       if (this.started)
         return;
-      song.addEventListener("play", () => this.started = true);
-      song.play();
+      this.song.addEventListener("play", () => this.started = true);
+      this.song.play();
       this.notesHitText.setAttribute("value", `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
     };
     const checkRimHit = () => {
@@ -5310,19 +5699,32 @@ AFRAME.registerComponent("taiko", {
     drumRimRight.addEventListener("contactbegin", checkRimHit);
     drumHeadLeft.addEventListener("contactbegin", checkHeadHit);
     drumHeadRight.addEventListener("contactbegin", checkHeadHit);
-    this.load();
+    this.loadBeatmapSet();
   },
-  load: async function() {
+  loadBeatmap: async function(beatmap) {
     const decoder = new BeatmapDecoder();
-    const decodePath = await (await fetch("res/TRUE - DREAM SOLISTER (Kibbleru) [Easy].osu")).text();
+    const decodeString = beatmap;
     const shouldParseSb = true;
-    const parsed = decoder.decodeFromString(decodePath, shouldParseSb);
+    const parsed = decoder.decodeFromString(decodeString, shouldParseSb);
     const ruleset = new TaikoRuleset();
     const taikoWithNoMod = ruleset.applyToBeatmap(parsed);
     console.log(taikoWithNoMod);
     this.metadata = taikoWithNoMod.metadata;
     this.hitObjects = taikoWithNoMod.hitObjects;
     this.activeBeats = [];
+  },
+  loadBeatmapSet: async function() {
+    const beatmapSet = await (await fetch("https://api.chimu.moe/v1/download/359501")).arrayBuffer();
+    const beatmapSetBuffers = unzipSync(new Uint8Array(beatmapSet));
+    console.log(beatmapSetBuffers);
+    const testBeatmapAudio = Object.values(beatmapSetBuffers)[0];
+    const audioBlob = new Blob([testBeatmapAudio.buffer], { type: "audio/mp3" });
+    this.song.src = URL.createObjectURL(audioBlob);
+    const testBeatmap = Object.values(beatmapSetBuffers)[5];
+    const dataview = new DataView(testBeatmap.buffer);
+    const textDecoder = new TextDecoder("utf-8");
+    const decodedBeatmap = textDecoder.decode(dataview);
+    this.loadBeatmap(decodedBeatmap);
   },
   tick: function(time, timeDelta) {
     if (!this.started)
@@ -5338,7 +5740,7 @@ AFRAME.registerComponent("taiko", {
       const scale = isStrong ? "1 1 .1" : "0.5 0.5 0.1";
       beat.setAttribute("position", `0 ${position} 0`);
       beat.setAttribute("scale", scale);
-      beat.setAttribute("animation", `property: position; to: 0 -2.5 0; dur: ${position * 100}; easing: linear`);
+      beat.setAttribute("animation", `property: position; to: 0 -2.5 0; dur: ${(position + 1) * 100}; easing: linear`);
       beat.setAttribute("material", `color: ${color}`);
       beat.id = `${this.currentBeat}`;
       document.querySelector("#noteHighway").appendChild(beat);

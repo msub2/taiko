@@ -10,7 +10,6 @@
   <body>
     <a-scene taiko="" physx="autoLoad: true; wasmUrl: lib/physx.release.wasm; delay: 1000">
       <a-assets>
-        <audio id="song" src="res/DREAM SOLISTER.mp3" preload="auto"></audio>
         <audio id="hitSound" src="res/taiko hit normal.wav" preload="auto"></audio>
         <audio id="clapSound" src="res/taiko hit clap.wav" preload="auto"></audio>
       </a-assets>
@@ -23,11 +22,11 @@
         <a-camera id="head" look-controls></a-camera>
         <a-entity id="leftHand" tracked-controls="hand: left; space: gripSpace">
           <a-box width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
-                 physx-body="type: kinematic"></a-box>
+          physx-body="type: kinematic"></a-box>
         </a-entity>
         <a-entity id="rightHand" tracked-controls="hand: right; space: gripSpace">
           <a-box width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
-                 physx-body="type: kinematic"></a-box>
+          physx-body="type: kinematic"></a-box>
         </a-entity>
       </a-entity>
       <!-- Drum -->
@@ -39,10 +38,13 @@
              physx-body="type: static; emitCollisionEvents: true"></a-box>
       <a-box id="drumRimRight" position=".3 1 -.5" width=".2" height=".2" depth=".2" material="color: blue"
              physx-body="type: static; emitCollisionEvents: true"></a-box>
+      <!-- UI -->
       <a-text id="notesHit" value="Notes hit:" position="1 2 -2"></a-text>
       <a-text id="noteStreak" value="Streak:" position="1 1.6 -2"></a-text>
+      <!-- Audio -->
       <a-entity id="hit" sound="src: #hitSound; poolSize: 8; autoplay: false"></a-sound>
       <a-entity id="clap" sound="src: #clapSound; poolSize: 8; autoplay: false"></a-sound>
+      <audio id="song"></audio>
     </a-scene>
   </body>
 </html>
