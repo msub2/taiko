@@ -4,7 +4,7 @@
   "description": "WebXR Taiko",
   "main": "index.js",
   "scripts": {
-    "dev": "esbuild src/taiko.js --bundle --format=esm --outfile=bundle.js --serve=localhost:9001 --servedir=.",
+    "dev": "esbuild src/taiko.js --bundle --format=esm --outfile=bundle.js --servedir=.",
     "build": "esbuild src/taiko.js --bundle --format=esm --outfile=bundle.js"
   },
   "author": "Daniel Adams",
