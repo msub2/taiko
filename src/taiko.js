@@ -16,16 +16,18 @@ AFRAME.registerComponent('taiko', {
     this.currentBeat = 0;
     this.notesHit = 0;
     this.noteStreak = 0;
+    this.leftStickHit = false;
+    this.rightStickHit = false;
 
     this.notesHitText = document.querySelector('#notesHit');
     this.noteStreakText = document.querySelector('#noteStreak');
-    const drumRimLeft = document.querySelector('#drumRimLeft');
-    const drumRimRight = document.querySelector('#drumRimRight');
-    const drumHeadLeft = document.querySelector('#drumHeadLeft');
-    const drumHeadRight = document.querySelector('#drumHeadRight');
+    this.drumRimLeft = document.querySelector('#drumRimLeft');
+    this.drumRimRight = document.querySelector('#drumRimRight');
+    this.drumHeadLeft = document.querySelector('#drumHeadLeft');
+    this.drumHeadRight = document.querySelector('#drumHeadRight');
     this.song = document.querySelector('#song');
-    const hitSound = document.querySelector('#hit').components.sound;
-    const clapSound = document.querySelector('#clap').components.sound;
+    this.hitSound = document.querySelector('#hit').components.sound;
+    this.clapSound = document.querySelector('#clap').components.sound;
 
     const startSong  = () => {
       if (this.started) return;
@@ -35,8 +37,12 @@ AFRAME.registerComponent('taiko', {
       this.notesHitText.setAttribute('value', `Notes hit: ${this.notesHit}/${this.hitObjects.length}`);
     }
 
-    const checkRimHit = () => {
-      clapSound.playSound();
+    const rimHit = e => {
+      const stick = e.detail.otherComponent.el.id;
+      if (this[`${stick}Hit`]) return;
+      else this[`${stick}Hit`] = true;
+
+      this.clapSound.playSound();
       if (this.activeBeats.length === 0) return;
 
       if (this.activeBeats[0].isRim) {
@@ -50,8 +56,12 @@ AFRAME.registerComponent('taiko', {
       }
     }
 
-    const checkHeadHit = () => {
-      hitSound.playSound();
+    const headHit = e => {
+      const stick = e.detail.otherComponent.el.id;
+      if (this[`${stick}Hit`]) return;
+      else this[`${stick}Hit`] = true;
+
+      this.hitSound.playSound();
       if (this.activeBeats.length === 0) return;
 
       if (!this.activeBeats[0].isRim) {
@@ -65,14 +75,19 @@ AFRAME.registerComponent('taiko', {
       }
     }
 
+    const stickHitEnd = e => {
+      const stick = e.detail.otherComponent.el.id;
+      this[`${stick}Hit`] = false;
+    }
+
     // Keyboard controls
     document.addEventListener('keypress', e => {
       if (e.key === ' ') {
         startSong();
       } else if (e.key === 'z' || e.key === 'v') {
-        checkRimHit();
+        rimHit();
       } else if (e.key === 'x' || e.key === 'c') {
-        checkHeadHit();
+        headHit();
       }
     });
 
@@ -81,10 +96,14 @@ AFRAME.registerComponent('taiko', {
       this.el.sceneEl.xrSession.addEventListener('squeezestart', startSong);
     });
 
-    drumRimLeft.addEventListener('contactbegin', checkRimHit);
-    drumRimRight.addEventListener('contactbegin', checkRimHit);
-    drumHeadLeft.addEventListener('contactbegin', checkHeadHit);
-    drumHeadRight.addEventListener('contactbegin', checkHeadHit);
+    this.drumRimLeft.addEventListener('contactbegin', rimHit);
+    this.drumRimRight.addEventListener('contactbegin', rimHit);
+    this.drumHeadLeft.addEventListener('contactbegin', headHit);
+    this.drumHeadRight.addEventListener('contactbegin', headHit);
+    this.drumRimLeft.addEventListener('contactend', stickHitEnd);
+    this.drumRimRight.addEventListener('contactend', stickHitEnd);
+    this.drumHeadLeft.addEventListener('contactend', stickHitEnd);
+    this.drumHeadRight.addEventListener('contactend', stickHitEnd);
     
     this.loadBeatmapSet();
   },

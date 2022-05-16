@@ -21,11 +21,11 @@
       <a-entity id="player">
         <a-camera id="head" look-controls></a-camera>
         <a-entity id="leftHand" tracked-controls="hand: left; space: gripSpace">
-          <a-box width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
+          <a-box id="leftStick" width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
           physx-body="type: kinematic"></a-box>
         </a-entity>
         <a-entity id="rightHand" tracked-controls="hand: right; space: gripSpace">
-          <a-box width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
+          <a-box id="rightStick" width=".01" depth=".01" height=".2" position="0 0 -0.1" rotation="90 0 0"
           physx-body="type: kinematic"></a-box>
         </a-entity>
       </a-entity>
