@@ -4,13 +4,14 @@
   "description": "WebXR Taiko",
   "main": "index.js",
   "scripts": {
-    "dev": "esbuild src/taiko.js --bundle --format=esm --outfile=bundle.js --servedir=.",
-    "build": "esbuild src/taiko.js --bundle --format=esm --outfile=bundle.js"
+    "dev": "esbuild src/index.js --bundle --format=esm --outfile=bundle.js --servedir=.",
+    "build": "esbuild src/index.js --bundle --format=esm --outfile=bundle.js"
   },
   "author": "Daniel Adams",
   "license": "ISC",
   "dependencies": {
     "fflate": "^0.7.3",
+    "osu-parsers": "github:msub2/osu-parsers",
     "osu-taiko-stable": "^2.1.3"
   },
   "devDependencies": {

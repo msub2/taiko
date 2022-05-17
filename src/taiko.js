@@ -1,4 +1,4 @@
-import { BeatmapDecoder } from '../lib/osu-parsers.js';
+import { BeatmapDecoder } from 'osu-parsers';
 import { TaikoRuleset } from 'osu-taiko-stable';
 import { unzipSync } from 'fflate';
 
